@@ -10,32 +10,35 @@ using namespace std;
    #define CLEAR_SCREEN "clear"
 #endif
 
+// Estrutura para armazenar informações de um paciente
 struct Paciente {
-   int id;
-   int prioridade;
-   string nome;
-   string telefone;
-   string historicoMedico;
+   int id;// Identificador único do paciente
+   int prioridade; // Nível de prioridade do paciente
+   string nome;// Nome do paciente   
+   string telefone;// Telefone de contato do paciente
+   string historicoMedico;// Histórico médico do paciente
 };
 
+// Estrutura de um nó da Árvore AVL
 struct NodoAVL {
-   Paciente paciente;
-   int altura;
-   NodoAVL* esq;
-   NodoAVL* dir;
+   Paciente paciente; // Dados do paciente armazenados no nó
+   int altura; // Altura do nó na árvore AVL
+   NodoAVL* esq;  // Ponteiro para o filho esquerdo
+   NodoAVL* dir; // Ponteiro para o filho direito
 };
+// Mapeamentos para facilitar a busca por ID ou nome
+unordered_map<int, string> mapIdParaNome;  // Mapeia ID para Nome
+unordered_map<string, int> mapNomeParaId; // Mapeia Nome para ID
 
-unordered_map<int, string> mapIdParaNome;
-unordered_map<string, int> mapNomeParaId;
-
+// Retorna a altura de um nó na árvore AVL
 int altura(NodoAVL* nodo) {
    return nodo ? nodo->altura : 0;
 }
-
+// Calcula o fator de balanceamento de um nó
 int fatorBalanceamento(NodoAVL* nodo) {
    return nodo ? altura(nodo->esq) - altura(nodo->dir) : 0;
 }
-
+// Realiza uma rotação à direita para balanceamento
 NodoAVL* rotacaoDireita(NodoAVL* y) {
    NodoAVL* x = y->esq;
    y->esq = x->dir;
@@ -44,7 +47,7 @@ NodoAVL* rotacaoDireita(NodoAVL* y) {
    x->altura = max(altura(x->esq), altura(x->dir)) + 1;
    return x;
 }
-
+// Realiza uma rotação à esquerda para balanceamento
 NodoAVL* rotacaoEsquerda(NodoAVL* x) {
    NodoAVL* y = x->dir;
    x->dir = y->esq;
@@ -53,7 +56,7 @@ NodoAVL* rotacaoEsquerda(NodoAVL* x) {
    y->altura = max(altura(y->esq), altura(y->dir)) + 1;
    return y;
 }
-
+// Realiza o balanceamento da árvore AVL
 NodoAVL* balancear(NodoAVL* nodo) {
    int balance = fatorBalanceamento(nodo);
    if (balance > 1) {
@@ -85,7 +88,7 @@ NodoAVL* inserir(NodoAVL* raiz, Paciente paciente) {
    raiz->altura = max(altura(raiz->esq), altura(raiz->dir)) + 1;
    return balancear(raiz);
 }
-
+// Insere um novo paciente na árvore AVL
 NodoAVL* buscarPorID(NodoAVL* raiz, int id) {
    if (!raiz) return nullptr;
    if (raiz->paciente.id == id) return raiz;
@@ -182,9 +185,9 @@ void alterarPrioridade(NodoAVL*& raiz, const string& chave, int novaPrioridade) 
    }
 }
 
-// Fun��o para listar pacientes em ordem (inorder)
+// Função para listar pacientes em ordem (inorder)
 void listarPacientes(NodoAVL* raiz) {
-   if (!raiz) return; // N�o exibe nada se n�o houver pacientes
+   if (!raiz) return; // Não exibe nada se não houver pacientes
 
    listarPacientes(raiz->esq);
    cout << "ID: " << raiz->paciente.id << " | Nome: " << raiz->paciente.nome
@@ -192,7 +195,7 @@ void listarPacientes(NodoAVL* raiz) {
    listarPacientes(raiz->dir);
 }
 
-// Fun��o do Menu
+// Função do Menu
 void menu(NodoAVL*& raiz) {
    int opcao;
    do {
